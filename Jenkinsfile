@@ -7,9 +7,9 @@ def CREDENTIALS_GITHUB = 'jenkins-github'
 def DOCKER_REGISTRY = 'docker.appdirect.tools'
 def IMAGE_NAME = 'appdirect-knative-controller'
 def CREDENTIALS_DOCKER_RW = 'docker-rw'
-def KO_IMAGE = "knative-ko"
 
 def withKoImage(body) {
+    def KO_IMAGE = "docker.appdirect.tools/appdirect/knative-ko"
     docker.image(KO_IMAGE).inside {
         body()
     }
