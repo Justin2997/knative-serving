@@ -7,6 +7,7 @@ def CREDENTIALS_GITHUB = 'jenkins-github'
 def DOCKER_REGISTRY_DEPLOY = 'docker.appdirect.tools'
 def DOCKER_REGISTRY_BUILD = 'docker.appdirect.tools'
 def IMAGE_NAME = 'appdirect-knative-controller'
+def PROJECT_DIR = 'knative-serving'
 def CREDENTIALS_DOCKER_RW = 'docker-rw'
 
 def withKoImage(body) {
@@ -40,12 +41,17 @@ node {
                     passwordVariable: 'DOCKER_RW_PASSWD']
             ]) {
                 echo 'Docker Registry Login'
+                env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
                 sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
                 sh "export KO_DOCKER_REPO=${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
 
                 echo 'Publish docker image build with ko'
                 sh "ko resolve -f config/controller.yaml > appdirect-controller.yaml"
                 sh "more appdirect-controller.yaml"
+            }
+
+            always {
+                sh "rm ${PROJECT_DIR}/.docker/config.json"
             }
         }
     }
@@ -60,12 +66,17 @@ node {
                         passwordVariable: 'DOCKER_RW_PASSWD']
                 ]) {
                     echo 'Docker Registry Login'
+                    env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
                     sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_DEPLOY}"
                     sh "export KO_DOCKER_REPO=${DOCKER_REGISTRY_DEPLOY}/${IMAGE_NAME}"
 
                     echo 'Publish docker image build with ko'
                     sh "ko resolve -f config/controller.yaml > appdirect-controller.yaml"
                     sh "more appdirect-controller.yaml"
+                }
+
+                always {
+                    sh "rm ${PROJECT_DIR}/.docker/config.json"
                 }
             }
         }
