@@ -44,6 +44,7 @@ node {
                 env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
                 sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
                 sh "export KO_DOCKER_REPO=${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
+                sh "echo $KO_DOCKER_REPO"
 
                 echo 'Publish docker image build with ko'
                 sh "ko resolve -f config/controller.yaml > appdirect-controller.yaml"
