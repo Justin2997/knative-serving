@@ -1,0 +1,86 @@
+diff --git a/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/aws/aws.go b/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/aws/aws.go
+new file mode 100644
+index 0000000..4574fa7
+--- /dev/null
++++ b/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/aws/aws.go
+@@ -0,0 +1,38 @@
++package aws
++
++import (
++	awscredentialprovider "k8s.io/kubernetes/pkg/credentialprovider/aws"
++)
++
++func init() {
++	for _, region := range wellKnownRegions {
++		awscredentialprovider.RegisterCredentialsProvider(region)
++	}
++}
++
++// wellKnownRegions is the complete list of regions known to the AWS cloudprovider
++// and credentialprovider.
++var wellKnownRegions = [...]string{
++	// from `aws ec2 describe-regions --region us-east-1 --query Regions[].RegionName | sort`
++	"ap-northeast-1",
++	"ap-northeast-2",
++	"ap-northeast-3",
++	"ap-south-1",
++	"ap-southeast-1",
++	"ap-southeast-2",
++	"ca-central-1",
++	"eu-central-1",
++	"eu-west-1",
++	"eu-west-2",
++	"eu-west-3",
++	"sa-east-1",
++	"us-east-1",
++	"us-east-2",
++	"us-west-1",
++	"us-west-2",
++
++	// these are not registered in many / most accounts
++	"cn-north-1",
++	"cn-northwest-1",
++	"us-gov-west-1",
++}
+diff --git a/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/aws/doc.go b/pkg/authn/k8schain/aws/doc.go
+new file mode 100644
+index 0000000..541b03f
+--- /dev/null
++++ b/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/aws/doc.go
+@@ -0,0 +1,16 @@
++// Copyright 2018 Google LLC All Rights Reserved.
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//    http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++
++// package aws registers credential providers.
++package aws
+diff --git a/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/k8schain.go b/pkg/authn/k8schain/k8schain.go
+index d90ac4d..c7a19e6 100644
+--- a/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/k8schain.go
++++ b/vendor/github.com/google/go-containerregistry/pkg/authn/k8schain/k8schain.go
+@@ -25,12 +25,14 @@ import (
+ 	credentialprovidersecrets "k8s.io/kubernetes/pkg/credentialprovider/secrets"
+ 
+ 	// Credential providers
+-	_ "k8s.io/kubernetes/pkg/credentialprovider/aws"
++	_ "github.com/google/go-containerregistry/pkg/authn/k8schain/aws"
+ 	_ "k8s.io/kubernetes/pkg/credentialprovider/azure"
+ 	_ "k8s.io/kubernetes/pkg/credentialprovider/gcp"
+ 	// TODO(mattmoor): This doesn't seem to build, figure out why `dep ensure`
+ 	// is not working and add constraints.
+ 	// _ "k8s.io/kubernetes/pkg/credentialprovider/rancher"
++	// This doesn't have an init() to register things.
++	// _ "k8s.io/kubernetes/pkg/credentialprovider/aws"
+ )
+ 
+ // Options holds configuration data for guiding credential resolution.

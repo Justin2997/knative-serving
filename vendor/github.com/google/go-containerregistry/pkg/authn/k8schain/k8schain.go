@@ -25,12 +25,14 @@ import (
 	credentialprovidersecrets "k8s.io/kubernetes/pkg/credentialprovider/secrets"
 
 	// Credential providers
-	_ "k8s.io/kubernetes/pkg/credentialprovider/aws"
+	_ "github.com/google/go-containerregistry/pkg/authn/k8schain/aws"
 	_ "k8s.io/kubernetes/pkg/credentialprovider/azure"
 	_ "k8s.io/kubernetes/pkg/credentialprovider/gcp"
 	// TODO(mattmoor): This doesn't seem to build, figure out why `dep ensure`
 	// is not working and add constraints.
 	// _ "k8s.io/kubernetes/pkg/credentialprovider/rancher"
+	// This doesn't have an init() to register things.
+	// _ "k8s.io/kubernetes/pkg/credentialprovider/aws"
 )
 
 // Options holds configuration data for guiding credential resolution.
