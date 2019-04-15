@@ -43,10 +43,10 @@ node {
                 echo 'Docker Registry Login'
                 env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
                 sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
-                env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
 
                 echo 'Publish docker image build with ko'
-                sh "ko resolve -f config/controller.yaml > appdirect-controller.yaml"
+                env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
+                sh "ko resolve -f config/controller.yaml"
                 sh "more appdirect-controller.yaml"
             }
 
@@ -68,10 +68,10 @@ node {
                     echo 'Docker Registry Login'
                     env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
                     sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_DEPLOY}"
-                    env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
 
                     echo 'Publish docker image build with ko'
-                    sh "ko resolve -f config/controller.yaml > appdirect-controller.yaml"
+                    env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
+                    sh "ko resolve -f config/controller.yaml"
                     sh "more appdirect-controller.yaml"
                 }
 
