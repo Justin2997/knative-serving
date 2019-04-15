@@ -46,7 +46,8 @@ node {
 
                 echo 'Publish docker image build with ko'
                 env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
-                sh "ko publish  ./config/controller.yaml"
+                sh "ls"
+                sh "ko publish /config/controller.yaml"
                 sh "more appdirect-controller.yaml"
             }
 
@@ -71,7 +72,8 @@ node {
 
                     echo 'Publish docker image build with ko'
                     env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
-                    sh "ko publish  ./config/controller.yaml"
+                    sh "ls"
+                    sh "ko publish /config/controller.yaml"
                     sh "more appdirect-controller.yaml"
                 }
 
