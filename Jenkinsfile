@@ -34,13 +34,14 @@ pipeline {
                 script {
                     echo "Runing ko publish to push the custom controller"
                     image.inside {
-                         withCredentials([
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                        usernameVariable: 'DOCKER_RW_USER',
-                        passwordVariable: 'DOCKER_RW_PASSWD']
-                    ]) {
-                        echo 'Docker Registry Login'
-                        sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                        withCredentials([
+                            [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                            usernameVariable: 'DOCKER_RW_USER',
+                            passwordVariable: 'DOCKER_RW_PASSWD']
+                        ]) {
+                            echo 'Docker Registry Login'
+                            sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                        }
                     }
                     sh "docker run --rm -v /root/.docker/config.json:/root/.docker/config.json -v /var/run/docker.sock:/var/run/docker.sock docker.appdirect.tools/${projectName}/${projectName}:${VERSION}"
                 }
