@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     echo "Runing ko publish to push the custom controller"
-                    sh "docker run -it -v /var/run/docker.sock:/var/run/docker.sock docker.appdirect.tools/${projectName}/${projectName}:${VERSION}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock docker.appdirect.tools/${projectName}/${projectName}:${VERSION}"
                 }
             }
         }
