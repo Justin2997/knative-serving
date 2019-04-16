@@ -1,7 +1,10 @@
 #!/usr/bin/env groovy
 def projectName = "knative-serving"
 def projectDir = "src/github.com/AppDirect/${projectName}"
+
+def DOCKER_REGISTRY = 'docker.appdirect.tools'
 def CREDENTIALS_DOCKER_RW = 'docker-rw'
+def IMAGE_NAME = 'appdirect-knative-controller'
 
 pipeline {
     agent any
