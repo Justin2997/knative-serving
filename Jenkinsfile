@@ -50,6 +50,9 @@ node {
                 sh "mkdir -p .go/src/github.com/knative"
                 sh "cp -r ./knative-serving .go/src/github.com/knative/serving"
                 sh "ls"
+                sh "echo $GOPATH"
+                sh "export TMP=$GOPATH"
+                sh "export GOPATH=./go"
                 sh "ko publish github.com/knative/serving/cmd/controller"
                 sh "more appdirect-controller.yaml"
             }
