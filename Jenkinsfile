@@ -23,7 +23,7 @@ node('build') {
     }
   }
 
-  stage('Run') {
+  stage('Deploy') {
     echo "Runing ko publish to push the custom controller"
     image.run("-it -v /var/run/docker.sock:/var/run/docker.sock")
   }
