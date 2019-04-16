@@ -1,91 +1,34 @@
 #!/usr/bin/env groovy
-@Library('jenkins-shared-library') _
+def projectName = "knative-serving"
+def projectDir = "src/github.com/AppDirect/${projectName}"
+def image
 
-def CREDENTIALS_ARTIFACTORY = 'jenkins-artifactory-credentials'
-def CREDENTIALS_GITHUB = 'jenkins-github'
+node('build') {
+  stage('Checkout sources') {
+    checkoutTo projectDir
+  }
 
-def DOCKER_REGISTRY_DEPLOY = 'docker.appdirect.tools'
-def DOCKER_REGISTRY_BUILD = 'docker.appdirect.tools'
-def IMAGE_NAME = 'appdirect-knative-controller'
-def PROJECT_DIR = 'knative-serving'
-def CREDENTIALS_DOCKER_RW = 'docker-rw'
+  stage('Read version') {
+    env.VERSION = readVersion(projectDir)
+  }
 
-def withKoImage(body) {
-    def KO_IMAGE = "docker.appdirect.tools/appdirect/knative-ko"
-    docker.image(KO_IMAGE).inside {
-        body()
-    }
-}
-
-node {
-    stage('Checkout') {
-        echo 'Checking out from repository...'
-        checkout scm: [
-            $class: 'GitSCM',
-            branches: scm.branches,
-            userRemoteConfigs: scm.userRemoteConfigs,
-            extensions: [
-                    [$class: 'CloneOption', noTags: false],
-                    [$class: 'LocalBranch', localBranch: "**"]
-            ]
-        ]
-        echo sh(returnStdout: true, script: 'env')
-    }
- 
-    stage('Build') { 
-        sh "echo 'Setup stage'"
-        withKoImage {
-            withCredentials([
-                    [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                    usernameVariable: 'DOCKER_RW_USER',
-                    passwordVariable: 'DOCKER_RW_PASSWD']
-            ]) {
-                echo 'Docker Registry Login'
-                env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
-                sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
-
-                echo 'Publish docker image build with ko'
-                env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
-                env.GOPATH = "./go"
-                sh "mkdir -p .go/src/github.com/knative"
-                sh "cp -r ./knative-serving .go/src/github.com/knative/serving"
-                sh "ls"
-                sh "echo $GOPATH"
-                sh "export TMP=$GOPATH"
-                sh "export GOPATH=./go"
-                sh "ko publish ./go/src/github.com/knative/serving/cmd/controller"
-                sh "more appdirect-controller.yaml"
-            }
-
-            always {
-                sh "rm ${PROJECT_DIR}/.docker/config.json"
-            }
+  stage('Docker build') {
+    echo "Building image with TAG: ${VERSION}"
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: dockerCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD']]) {
+        dir("${projectDir}") {
+            env.DOCKER_CONFIG = "${projectDir}/.docker"
+            sh 'docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.appdirect.tools'
+            image = docker.build "docker.appdirect.tools/${projectName}/${projectName}:${version}"
         }
     }
 
-    stage('Deploy'){
-        sh "echo 'Deploy the controller'"
-        withMasterBranch {
-            withKoImage {
-                withCredentials([
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                        usernameVariable: 'DOCKER_RW_USER',
-                        passwordVariable: 'DOCKER_RW_PASSWD']
-                ]) {
-                    echo 'Docker Registry Login'
-                    env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
-                    sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_DEPLOY}"
-
-                    echo 'Publish docker image build with ko'
-                    env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
-                    sh "ko publish ./cmd/controller"
-                    sh "more appdirect-controller.yaml"
-                }
-
-                always {
-                    sh "rm ${PROJECT_DIR}/.docker/config.json"
-                }
-            }
-        }
+    always {
+        sh 'rm ${projectDir}/.docker/config.json'
     }
+  }
+
+  stage('Run') {
+    echo "Runing ko publish to push the custom controller"
+    image.run("-it -v /var/run/docker.sock:/var/run/docker.sock")
+  }
 }
