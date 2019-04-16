@@ -53,7 +53,7 @@ node {
                 sh "echo $GOPATH"
                 sh "export TMP=$GOPATH"
                 sh "export GOPATH=./go"
-                sh "ko publish github.com/knative/serving/cmd/controller"
+                sh "ko publish ./go/src/github.com/knative/serving/cmd/controller"
                 sh "more appdirect-controller.yaml"
             }
 
