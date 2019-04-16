@@ -19,6 +19,7 @@ node {
   }
 
   stage('Read version') {
+    sh "ls"
     env.VERSION = readVersion(projectDir)
   }
 
