@@ -18,6 +18,10 @@ node {
     echo sh(returnStdout: true, script: 'env')
   }
 
+  stage('Read version') {
+    env.VERSION = readVersion(projectDir)
+  }
+
   stage('Build') {
     echo "Building image with TAG: ${VERSION}"
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: dockerCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD']]) {
