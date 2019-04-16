@@ -3,12 +3,22 @@ def projectName = "knative-serving"
 def projectDir = "src/github.com/AppDirect/${projectName}"
 def image
 
-node('build') {
-  stage('Checkout sources') {
-    checkoutTo projectDir
+node {
+  stage('Checkout') {
+    echo 'Checking out from repository...'
+        checkout scm: [
+            $class: 'GitSCM',
+            branches: scm.branches,
+            userRemoteConfigs: scm.userRemoteConfigs,
+            extensions: [
+                    [$class: 'CloneOption', noTags: false],
+                    [$class: 'LocalBranch', localBranch: "**"]
+            ]
+        ]
+    echo sh(returnStdout: true, script: 'env')
   }
 
-  stage('Docker build') {
+  stage('Build') {
     echo "Building image with TAG: ${VERSION}"
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: dockerCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD']]) {
         dir("${projectDir}") {
