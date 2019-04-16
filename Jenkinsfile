@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     echo "Runing ko publish to push the custom controller"
-                    image.run("-it -v /var/run/docker.sock:/var/run/docker.sock")
+                    image.run("-v /var/run/docker.sock:/var/run/docker.sock")
                 }
             }
         }
