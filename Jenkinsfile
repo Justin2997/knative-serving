@@ -8,10 +8,6 @@ node('build') {
     checkoutTo projectDir
   }
 
-  stage('Read version') {
-    env.VERSION = readVersion(projectDir)
-  }
-
   stage('Docker build') {
     echo "Building image with TAG: ${VERSION}"
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: dockerCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD']]) {
