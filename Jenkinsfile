@@ -28,7 +28,7 @@ node {
         dir("${projectDir}") {
             env.DOCKER_CONFIG = "${projectDir}/.docker"
             sh 'docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.appdirect.tools'
-            image = docker.build "docker.appdirect.tools/${projectName}/${projectName}:${version}"
+            image = docker.build "docker.appdirect.tools/${projectName}/${projectName}:${VERSION}"
         }
     }
 
