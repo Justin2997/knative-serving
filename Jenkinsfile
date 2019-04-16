@@ -13,7 +13,9 @@ pipeline {
 
         stage('Read version') {
             steps {
-                env.VERSION = readVersion(projectDir)
+                script {
+                    env.VERSION = readVersion(projectDir)
+                }
             }
         }
 
