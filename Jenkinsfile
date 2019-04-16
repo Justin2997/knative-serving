@@ -5,17 +5,7 @@ def image
 
 node {
   stage('Checkout') {
-    echo 'Checking out from repository...'
-        checkout scm: [
-            $class: 'GitSCM',
-            branches: scm.branches,
-            userRemoteConfigs: scm.userRemoteConfigs,
-            extensions: [
-                    [$class: 'CloneOption', noTags: false],
-                    [$class: 'LocalBranch', localBranch: "**"]
-            ]
-        ]
-    echo sh(returnStdout: true, script: 'env')
+    checkoutTo projectDir
   }
 
   stage('Read version') {
