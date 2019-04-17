@@ -17,5 +17,3 @@ ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 WORKDIR $GOPATH/src/github.com/knative/serving
 COPY . .
 COPY ko-publish.sh /ko-publish.sh
-
-ENTRYPOINT [ "sh", "/ko-publish.sh" ]
