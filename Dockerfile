@@ -11,6 +11,8 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN go get github.com/google/ko/cmd/ko
 RUN go get github.com/justin2997/go-containerregistry/cmd/crane
 
+RUN mkdir /.docker
+
 ARG KO_DOCKER_REPO=docker.appdirect.tools
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 
