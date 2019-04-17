@@ -9,6 +9,7 @@ RUN apk add git
                                
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN go get github.com/google/ko/cmd/ko
+RUN go get github.com/google/go-containerregistry/cmd/crane
 
 ARG KO_DOCKER_REPO=docker.appdirect.tools/knative
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
