@@ -34,7 +34,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'Dockerfile'
-                    args '--rm -v /root/.docker/config.json:/root/.docker/config.json -v /var/run/docker.sock:/var/run/docker.sock'
+                    args '--rm -v /root/.docker/config.json:/.docker/config.json -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
