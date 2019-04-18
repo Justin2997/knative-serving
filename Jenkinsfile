@@ -38,14 +38,9 @@ pipeline {
                 }
             }
             steps {
-                withCredentials([
-                    [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                    usernameVariable: 'DOCKER_RW_USER',
-                    passwordVariable: 'DOCKER_RW_PASSWD']
-                ]){
                      script {
                             sh 'echo "Runing ko publish to push the custom controller"'
-                            sh './ko-publish'
+                            sh 'docker run --rm -v /root/.docker/config.json:/.docker/config.json -v /var/run/docker.sock:/var/run/docker.sock docker.appdirect.tools/${projectName}/${projectName}:${VERSION}'
                     }
                 }
             }
