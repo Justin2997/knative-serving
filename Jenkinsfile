@@ -4,6 +4,12 @@ def projectDir = "src/github.com/AppDirect/${projectName}"
 def CREDENTIALS_DOCKER_RW = 'docker-rw'
 def DOCKER_REGISTRY = 'docker.appdirect.tools'
 
+def withDockerKoImage(body) {
+    iamge.inside {
+        body()
+    }
+}
+
 pipeline {
     agent any
     stages{
@@ -32,9 +38,18 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                    script {
-                        sh 'echo "Runing ko publish to push the custom controller"'
-                        sh "docker run --rm -v /root/.docker/config.json:/root/.docker/config.json -v /var/run/docker.sock:/var/run/docker.sock docker.appdirect.tools/${projectName}/${projectName}:${VERSION}"
+                withCredentials([
+                    [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                    usernameVariable: 'DOCKER_RW_USER',
+                    passwordVariable: 'DOCKER_RW_PASSWD']
+                ]) {
+                    image.inside {
+                        script {
+                            sh 'echo "Runing ko publish to push the custom controller"'
+                            sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                            sh "./ko-publish.sh"
+                        }
+                    }
                 }
             }
         }
