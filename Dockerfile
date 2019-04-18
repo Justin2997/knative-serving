@@ -6,6 +6,7 @@ RUN apk update
 RUN apk add curl
 RUN apk add docker
 RUN apk add git
+RUN apk add sudo
                                
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN go get github.com/google/ko/cmd/ko
