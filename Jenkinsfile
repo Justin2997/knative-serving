@@ -34,7 +34,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename 'Dockerfile'
-                    args '--rm -v /var/run/docker.sock:/var/run/docker.sock'
+                    args '--rm -v /root/.docker/config.json:/.docker/config.json -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
@@ -45,7 +45,7 @@ pipeline {
                 ]){
                      script {
                             sh 'echo "Runing ko publish to push the custom controller"'
-                            sh 'docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} docker.appdirect.tools'
+                            sh 'sudo docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} docker.appdirect.tools'
                             sh 'ls'
                             sh './ko-publish'
                     }
