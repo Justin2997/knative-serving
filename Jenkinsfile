@@ -31,22 +31,18 @@ pipeline {
         }
 
         stage('Deploy') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 script {
-                    withCredentials([
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                        usernameVariable: 'DOCKER_RW_USER',
-                        passwordVariable: 'DOCKER_RW_PASSWD']
-                    ]) {
-                        sh 'echo "Runing ko publish to push the custom controller"'
-                        sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
-                        sh "./ko-publish.sh"
+                    image.inside {
+                        withCredentials([
+                            [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                            usernameVariable: 'DOCKER_RW_USER',
+                            passwordVariable: 'DOCKER_RW_PASSWD']
+                        ]) {
+                            sh 'echo "Runing ko publish to push the custom controller"'
+                            sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                            sh "./ko-publish.sh"
+                        }
                     }
                 }
             }
