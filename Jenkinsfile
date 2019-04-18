@@ -45,8 +45,8 @@ pipeline {
                         passwordVariable: 'DOCKER_RW_PASSWD']
                     ]) {
                         sh 'echo "Runing ko publish to push the custom controller"'
-                        sh "sudo docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
-                        sh "sudo ./ko-publish.sh"
+                        sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                        sh "./ko-publish.sh"
                     }
                 }
             }
