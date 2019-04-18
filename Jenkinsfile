@@ -45,7 +45,7 @@ pipeline {
                 ]){
                      script {
                             sh 'echo "Runing ko publish to push the custom controller"'
-                            sh 'su docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} docker.appdirect.tools'
+                            sh 'docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} docker.appdirect.tools'
                             sh 'ls'
                             sh './ko-publish'
                     }
