@@ -51,7 +51,6 @@ node {
                 sh '''
                     echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/github.com/knative/serving
-                    mv $WORKSPACE/go/src/knative/serving $WORKSPACE/go/src/github.com/knative/serving
                     export GOPATH=$WORKSPACE/go
                     ko publish github.com/knative/serving/cmd/controller
                     '''
