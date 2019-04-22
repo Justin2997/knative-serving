@@ -48,8 +48,8 @@ node {
                 echo 'Publish docker image build with ko'
                 sh "echo $GOPATH"
                 sh "ls"
-                sh "docker pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                sh "docker push docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
+                sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
+                sh "crane manifest docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
                 sh "ko publish github.com/knative/serving/cmd/controller"
             }
 
