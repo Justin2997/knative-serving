@@ -49,7 +49,7 @@ node {
                 sh "echo $GOPATH"
                 sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
                 sh '''
-                    echo $(pwd)
+                    echo $PWD
                     echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/knative/serving
                     mv knative-serving $WORKSPACE/go/src/knative/serving
