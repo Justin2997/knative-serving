@@ -44,7 +44,7 @@ node {
             ]) {
                 echo 'Docker Registry Login'
                 env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
-                sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
+                sh "export DOCKER_CONFIG= && docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
                 env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
 
                 echo 'Publish docker image build with ko'
@@ -58,7 +58,7 @@ node {
                     export GOPATH=$WORKSPACE/go
                     ln -s $WORKSPACE $GOPATH/src/knative/serving
                     echo $GOPATH
-                    ko resolve -f config/controller.yaml
+                    ko resolve -L -f config/controller.yaml -v=10
                     ko publish ./cmd/controller
                     '''
             }
