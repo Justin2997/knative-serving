@@ -52,8 +52,7 @@ node {
                     echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/knative/serving
                     export GOPATH=$WORKSPACE/go
-                    ko resolve -L -f config/controller.yaml -v=10
-                    ko publish ./cmd/controller
+                    ko resolve -f config/controller.yaml
                     '''
             }
 
