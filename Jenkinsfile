@@ -52,7 +52,7 @@ node {
                     echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/github.com/knative/serving
                     export GOPATH=$WORKSPACE/go
-                    more $GOPATH/src/github.com/knative/serving/main.go
+                    more $GOPATH/src/github.com/knative/serving/cmd/controller/main.go
                     ko publish github.com/knative/serving/cmd/controller
                     '''
             }
