@@ -46,6 +46,10 @@ node {
                 env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
 
                 echo 'Publish docker image build with ko'
+                sh "echo $GOPATH"
+                sh "ls"
+                sh "cd .."
+                sh "ls"
                 sh "ko publish github.com/knative/serving/cmd/controller"
             }
 
