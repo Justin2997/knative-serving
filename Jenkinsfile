@@ -32,20 +32,18 @@ node {
  
     stage('Build') { 
         sh "echo 'Setup stage'"
-        withMasterBranch {
-            withKoImage {
-                withCredentials([
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                        usernameVariable: 'DOCKER_RW_USER',
-                        passwordVariable: 'DOCKER_RW_PASSWD']
-                ]) {
-                    echo 'Docker Registry Login'
-                    sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
-                    sh "export KO_DOCKER_REPO=${DOCKER_REGISTRY}/${IMAGE_NAME}"
+        withKoImage {
+            withCredentials([
+                    [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                    usernameVariable: 'DOCKER_RW_USER',
+                    passwordVariable: 'DOCKER_RW_PASSWD']
+            ]) {
+                echo 'Docker Registry Login'
+                sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                sh "export KO_DOCKER_REPO=${DOCKER_REGISTRY}/${IMAGE_NAME}"
 
-                    echo 'Publish docker image build with ko'
-                    sh "ko publish github.com/knative/serving/cmd/controller"
-                }
+                echo 'Publish docker image build with ko'
+                sh "ko publish github.com/knative/serving/cmd/controller"
             }
         }
     }
