@@ -49,11 +49,17 @@ node {
 
                 echo 'Publish docker image build with ko'
                 sh "echo $GOPATH"
-                sh "ls"
                 sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
                 sh "crane manifest docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                sh "ko resolve -f config/controller.yaml"
-                sh "ko publish ./cmd/controller"
+                sh "echo $GOPATH
+                    mkdir -p $WORKSPACE/go/src/knative/serving
+                    mv knative-serving $WORKSPACE/go/src/knative/serving
+                    export GOPATH=$WORKSPACE/go
+                    ln -s $WORKSPACE $GOPATH/src/knative/serving
+                    echo $GOPATH
+                    ko resolve -f config/controller.yaml
+                    ko publish ./cmd/controller
+                    "
             }
 
             always {
