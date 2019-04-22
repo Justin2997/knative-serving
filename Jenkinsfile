@@ -48,8 +48,8 @@ node {
                 echo 'Publish docker image build with ko'
                 sh "echo $GOPATH"
                 sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                sh "crane manifest docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
                 sh '''
+                    echo $(pwd)
                     echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/knative/serving
                     mv knative-serving $WORKSPACE/go/src/knative/serving
@@ -62,7 +62,7 @@ node {
             }
 
             always {
-                sh "rm ${PROJECT_DIR}/.docker/config.json"
+                sh "rm $WORKSPACE/.docker/config.json"
             }
         }
     }
