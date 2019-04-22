@@ -51,7 +51,8 @@ node {
                 sh "echo $GOPATH"
                 sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
                 sh "crane manifest docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                sh "echo $GOPATH
+                sh '''
+                    echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/knative/serving
                     mv knative-serving $WORKSPACE/go/src/knative/serving
                     export GOPATH=$WORKSPACE/go
@@ -59,7 +60,7 @@ node {
                     echo $GOPATH
                     ko resolve -f config/controller.yaml
                     ko publish ./cmd/controller
-                    "
+                    '''
             }
 
             always {
