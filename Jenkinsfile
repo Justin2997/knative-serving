@@ -52,7 +52,7 @@ node {
                     echo $GOPATH
                     mkdir -p $WORKSPACE/go/src/knative/serving
                     ls
-                    cp -a $WORKSPACE/. $WORKSPACE/go/src/knative/serving/
+                    yes | cp -rfa $WORKSPACE/. $WORKSPACE/go/src/knative/serving/
                     export GOPATH=$WORKSPACE/go
                     ln -s $WORKSPACE $GOPATH/src/knative/serving
                     echo $GOPATH
