@@ -11,12 +11,11 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN go get github.com/google/ko/cmd/ko
 RUN go get github.com/justin2997/go-containerregistry/cmd/crane
 
-RUN mkdir -p /root/.docker/
-
-ARG KO_DOCKER_REPO=ko.local
+ARG KO_DOCKER_REPO=docker.appdirect.tools 
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
-ENV HOME=/root/
 
 WORKDIR $GOPATH/src/github.com/knative/serving
 COPY . .
 COPY ko-publish.sh /ko-publish.sh
+
+ENTRYPOINT [ "sh", "./ko.publish.sh" ]
