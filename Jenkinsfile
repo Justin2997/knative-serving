@@ -34,6 +34,8 @@ node {
  
     stage('Build') { 
         sh "echo 'Setup stage'"
+        sh "echo $WORKSPACE"
+        sh "export GOPATH=$WORKSPACE"
         withKoImage {
             withCredentials([
                     [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
