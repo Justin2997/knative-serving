@@ -47,9 +47,7 @@ node {
 
                 echo 'Publish docker image build with ko'
                 sh "echo $GOPATH"
-                sh "ls"
-                sh "cd .."
-                sh "ls"
+                sh "ls -d '/home/centos/go/'*"
                 sh "ko publish github.com/knative/serving/cmd/controller"
             }
 
