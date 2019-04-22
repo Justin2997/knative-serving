@@ -53,7 +53,7 @@ node {
                     mkdir -p $WORKSPACE/go/src/github.com/knative/serving
                     export GOPATH=$WORKSPACE/go
                     cd $GOPATH/src/github.com/knative/serving
-                    git clone git@github.com:knative/serving.git
+                    ls
                     more $GOPATH/src/github.com/knative/serving/cmd/controller/main.go
                     ko publish github.com/knative/serving/cmd/controller
                     '''
