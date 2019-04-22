@@ -34,8 +34,6 @@ node {
  
     stage('Build') { 
         sh "echo 'Setup stage'"
-        sh "echo $WORKSPACE"
-        sh "export GOPATH=$WORKSPACE"
         withKoImage {
             withCredentials([
                     [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
@@ -43,8 +41,8 @@ node {
                     passwordVariable: 'DOCKER_RW_PASSWD']
             ]) {
                 echo 'Docker Registry Login'
-                env.DOCKER_CONFIG = "${PROJECT_DIR}/.docker"
-                sh "export DOCKER_CONFIG= && docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
+                env.DOCKER_CONFIG = "$WORKSPACE/.docker"
+                sh "export DOCKER_CONFIG=$WORKSPACE/.docker && docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY_BUILD}"
                 env.KO_DOCKER_REPO = "${DOCKER_REGISTRY_BUILD}/${IMAGE_NAME}"
 
                 echo 'Publish docker image build with ko'
