@@ -53,7 +53,7 @@ node {
                     mkdir -p $WORKSPACE/go/src/github.com/knative/serving
                     mv $WORKSPACE/go/src/knative/serving $WORKSPACE/go/src/github.com/knative/serving
                     export GOPATH=$WORKSPACE/go
-                    ko resolve -f config/controller.yaml
+                    ko publish github.com/knative/serving/cmd/controller
                     '''
             }
 
