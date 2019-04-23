@@ -14,5 +14,7 @@ RUN go get github.com/justin2997/go-containerregistry/cmd/crane
 ARG KO_DOCKER_REPO=docker.appdirect.tools 
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 
+RUN docker
+
 WORKDIR $GOPATH/src/github.com/knative/serving
 COPY . .
