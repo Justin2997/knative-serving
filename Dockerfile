@@ -16,3 +16,4 @@ ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 
 WORKDIR $GOPATH/src/github.com/knative/serving
 COPY . .
+RUN chown -R 1000:1000 $GOPATH
