@@ -17,71 +17,76 @@ def withDockerNode(image, body) {
     }
 }
 
-node {
-    stage('Checkout') {
-        echo 'Checking out from repository...'
-        checkout scm: [
-            $class: 'GitSCM',
-            branches: scm.branches,
-            userRemoteConfigs: scm.userRemoteConfigs,
-            extensions: [
-                    [$class: 'CloneOption', noTags: false],
-                    [$class: 'LocalBranch', localBranch: "**"]
-            ]
-        ]
-        echo sh(returnStdout: true, script: 'env')
-    }
-
-    stage('Read version') {
-        steps {
-            script {
-                env.VERSION = readVersion(projectDir)
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out from repository...'
+                checkout scm: [
+                    $class: 'GitSCM',
+                    branches: scm.branches,
+                    userRemoteConfigs: scm.userRemoteConfigs,
+                    extensions: [
+                            [$class: 'CloneOption', noTags: false],
+                            [$class: 'LocalBranch', localBranch: "**"]
+                    ]
+                ]
+                echo sh(returnStdout: true, script: 'env')
             }
         }
-    }
 
-    stage('Setup') {
-        steps {
-            script {
-                sh "echo 'Setup stage'"
-                // Docker Artifactory login
-                withCredentials([
-                        [$class          : 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                        usernameVariable: 'DOCKER_RW_USER',
-                        passwordVariable: 'DOCKER_RW_PASSWD']
-                ]) {
-                    echo 'Docker Registry Login'
-                    sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+        stage('Read version') {
+            steps {
+                script {
+                    env.VERSION = readVersion(projectDir)
                 }
             }
         }
-    }
 
-    stage('Build') {
-        steps {
-            script {
-                ciImage = docker.build "${DOCKER_REGISTRY}/${PROJECT_DIR}/${IMAGE_NAME}:${VERSION}"
-            }
-        }
-    }
-
-    stage('Deploy') { 
-        steps {
-            script {
-                sh "echo 'Setup Deploy'"
-                withDockerNode(ciImage) {
+        stage('Setup') {
+            steps {
+                script {
+                    sh "echo 'Setup stage'"
+                    // Docker Artifactory login
                     withCredentials([
-                            [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                            [$class          : 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
                             usernameVariable: 'DOCKER_RW_USER',
                             passwordVariable: 'DOCKER_RW_PASSWD']
                     ]) {
                         echo 'Docker Registry Login'
                         sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
-                        sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                        sh '''
-                            echo $GOPATH
-                            ko publish github.com/knative/serving/cmd/controller
-                            '''
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    ciImage = docker.build "${DOCKER_REGISTRY}/${PROJECT_DIR}/${IMAGE_NAME}:${VERSION}"
+                }
+            }
+        }
+
+        stage('Deploy') { 
+            steps {
+                script {
+                    sh "echo 'Setup Deploy'"
+                    withDockerNode(ciImage) {
+                        withCredentials([
+                                [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                                usernameVariable: 'DOCKER_RW_USER',
+                                passwordVariable: 'DOCKER_RW_PASSWD']
+                        ]) {
+                            echo 'Docker Registry Login'
+                            sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                            sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
+                            sh '''
+                                echo $GOPATH
+                                ko publish github.com/knative/serving/cmd/controller
+                                '''
+                        }
                     }
                 }
             }
