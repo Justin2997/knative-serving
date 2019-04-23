@@ -5,6 +5,7 @@ LABEL version="1.0"
 RUN apk update
 RUN apk add curl
 RUN apk add docker
+RUN rc-update add docker boot
 RUN apk add git
                                
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
