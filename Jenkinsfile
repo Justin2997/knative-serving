@@ -14,7 +14,7 @@ def VERSION = "0.5.0"
 def ciImage
 
 def withDockerNode(image, body) {
-    image.inside {
+    image.inside('-v /var/run/docker.sock:/var/run/docker.sock') {
         body()
     }
 }
