@@ -5,7 +5,6 @@ LABEL version="1.0"
 RUN apk update
 RUN apk add curl
 RUN apk add docker
-RUN rc-update add docker boot
 RUN apk add git
                                
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -14,8 +13,6 @@ RUN go get github.com/justin2997/go-containerregistry/cmd/crane
 
 ARG KO_DOCKER_REPO=docker.appdirect.tools 
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
-
-RUN docker
 
 WORKDIR $GOPATH/src/github.com/knative/serving
 COPY . .

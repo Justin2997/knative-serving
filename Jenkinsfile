@@ -74,6 +74,7 @@ pipeline {
                                 passwordVariable: 'DOCKER_RW_PASSWD']
                         ]) {
                             echo 'Docker Registry Login'
+                            sh "service docker start"
                             sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
                             sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
                             sh '''
