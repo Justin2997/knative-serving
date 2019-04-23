@@ -66,21 +66,23 @@ node {
     }
 
     stage('Deploy') { 
-        step {
-            sh "echo 'Setup Deploy'"
-            withDockerNode(ciImage) {
-                withCredentials([
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
-                        usernameVariable: 'DOCKER_RW_USER',
-                        passwordVariable: 'DOCKER_RW_PASSWD']
-                ]) {
-                    echo 'Docker Registry Login'
-                    sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
-                    sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                    sh '''
-                        echo $GOPATH
-                        ko publish github.com/knative/serving/cmd/controller
-                        '''
+        steps {
+            script {
+                sh "echo 'Setup Deploy'"
+                withDockerNode(ciImage) {
+                    withCredentials([
+                            [$class: 'UsernamePasswordMultiBinding', credentialsId: CREDENTIALS_DOCKER_RW,
+                            usernameVariable: 'DOCKER_RW_USER',
+                            passwordVariable: 'DOCKER_RW_PASSWD']
+                    ]) {
+                        echo 'Docker Registry Login'
+                        sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
+                        sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
+                        sh '''
+                            echo $GOPATH
+                            ko publish github.com/knative/serving/cmd/controller
+                            '''
+                    }
                 }
             }
         }
