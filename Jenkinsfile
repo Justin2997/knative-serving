@@ -9,6 +9,7 @@ def IMAGE_NAME = 'appdirect-knative-controller'
 def PROJECT_DIR = 'knative-serving'
 def CREDENTIALS_DOCKER_RW = 'docker-rw'
 def path_to_version = "src/github.com/AppDirect/knative-serving"
+def VERSION = "0.5.0"
 
 def ciImage
 
@@ -34,14 +35,6 @@ pipeline {
                     ]
                 ]
                 echo sh(returnStdout: true, script: 'env')
-            }
-        }
-
-        stage('Read version') {
-            steps {
-                script {
-                    env.VERSION = readVersion(path_to_version)
-                }
             }
         }
 
