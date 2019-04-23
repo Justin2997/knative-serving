@@ -16,4 +16,6 @@ ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 
 WORKDIR $GOPATH/src/github.com/knative/serving
 COPY . .
+RUN addgroup -g 1000 gouser
+RUN adduser -G gouser -u 1000 gouser -D -h /home/gouser
 RUN chown -R 1000:1000 $GOPATH
