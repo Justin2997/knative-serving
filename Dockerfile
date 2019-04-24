@@ -8,10 +8,15 @@ RUN apk add docker
 RUN apk add git
                                
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-RUN go get github.com/google/ko/cmd/ko
-RUN go get github.com/justin2997/go-containerregistry/cmd/crane
+RUN go get github.com/google/go-containerregistry/cmd/crane
+RUN cd $GOPATH/src/github.com/google/go-containerregistry/cmd/crane  && \
+    git remote -v && \
+    git remote add fork https://github.com/justin2997/go-containerregistry && \
+    git pull fork master
 
-ARG KO_DOCKER_REPO=ko.local
+RUN go get github.com/google/ko/cmd/ko
+
+ARG KO_DOCKER_REPO=docker.appdirect.tools
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 
 WORKDIR $GOPATH/src/github.com/knative/serving
