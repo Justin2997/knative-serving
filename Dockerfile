@@ -8,8 +8,6 @@ RUN apk add docker
 RUN apk add git
                                
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
-RUN go get github.com/google/go-containerregistry/cmd/crane
 RUN go get github.com/google/ko/cmd/ko
 
 ARG KO_DOCKER_REPO=docker.appdirect.tools/knative-serving

@@ -75,11 +75,7 @@ pipeline {
                         ]) {
                             echo 'Docker Registry Login'
                             sh "docker login --username ${DOCKER_RW_USER} --password ${DOCKER_RW_PASSWD} ${DOCKER_REGISTRY}"
-                            sh "crane pull docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function out.tar && crane push out.tar docker.appdirect.tools/appdirect-hello-world-function/hello-world-nodejs-function"
-                            sh '''
-                                echo $GOPATH
-                                ko publish github.com/knative/serving/cmd/controller
-                                '''
+                            sh "ko publish github.com/knative/serving/cmd/controller"
                         }
                     }
                 }
