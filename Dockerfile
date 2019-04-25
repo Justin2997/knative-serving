@@ -12,7 +12,7 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN go get github.com/google/go-containerregistry/cmd/crane
 RUN go get github.com/google/ko/cmd/ko
 
-ARG KO_DOCKER_REPO=docker.appdirect.tools
+ARG KO_DOCKER_REPO=docker.appdirect.tools/knative-serving
 ENV KO_DOCKER_REPO=$KO_DOCKER_REPO
 
 WORKDIR $GOPATH/src/github.com/knative/serving
